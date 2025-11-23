@@ -1,0 +1,21 @@
+# Commands to run on your NAS (you're already root, so just copy/paste these)
+
+# 1. First, stop Plex Media Server
+/usr/syno/bin/synopkg stop PlexMediaServer
+
+# 2. Create a backup of Preferences.xml
+cp "/volume1/PlexMediaServer/AppData/Plex Media Server/Preferences.xml" "/volume1/PlexMediaServer/AppData/Plex Media Server/Preferences.xml.backup"
+
+# 3. Remove the authentication entries using sed
+sed -i 's/ PlexOnlineHome="[^"]*"//g' "/volume1/PlexMediaServer/AppData/Plex Media Server/Preferences.xml"
+sed -i 's/ PlexOnlineMail="[^"]*"//g' "/volume1/PlexMediaServer/AppData/Plex Media Server/Preferences.xml"
+sed -i 's/ PlexOnlineToken="[^"]*"//g' "/volume1/PlexMediaServer/AppData/Plex Media Server/Preferences.xml"
+sed -i 's/ PlexOnlineUsername="[^"]*"//g' "/volume1/PlexMediaServer/AppData/Plex Media Server/Preferences.xml"
+
+# 4. Start Plex Media Server again
+/usr/syno/bin/synopkg start PlexMediaServer
+
+# 5. Verify the changes (optional - to see what was removed)
+echo "Checking if entries were removed..."
+grep -E "PlexOnline(Home|Mail|Token|Username)" "/volume1/PlexMediaServer/AppData/Plex Media Server/Preferences.xml" || echo "All authentication entries have been removed successfully!"
+
