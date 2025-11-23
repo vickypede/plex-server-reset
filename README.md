@@ -31,6 +31,11 @@ Removes Plex authentication entries from the Windows Registry. Use this if your 
 powershell -ExecutionPolicy Bypass -File .\fix_plex_registry.ps1
 ```
 
+**⚠️ Important:** These are PowerShell scripts (`.ps1` files). You must run them in **PowerShell**, not Command Prompt (CMD). 
+- Open **PowerShell** (search for "PowerShell" in Start menu)
+- Navigate to the script location
+- Run the command above
+
 **What it does:**
 - Checks for Plex registry entries at `HKEY_CURRENT_USER\Software\Plex, Inc.\Plex Media Server`
 - Removes: `PlexOnlineHome`, `PlexOnlineMail`, `PlexOnlineToken`, `PlexOnlineUsername`
@@ -95,6 +100,18 @@ Quick reference commands for fixing Plex on NAS systems. Copy and paste these co
 ## Quick Start
 
 ### For Windows Plex Servers
+
+**Quick One-Liner (if you can't download files):**
+
+Open PowerShell and paste this single command:
+
+```powershell
+$r="HKCU:\Software\Plex, Inc.\Plex Media Server";if(Test-Path $r){@("PlexOnlineHome","PlexOnlineMail","PlexOnlineToken","PlexOnlineUsername")|%{if((gp $r -Name $_ -EA 0).$_){rp $r -Name $_ -EA 0;Write-Host "Removed: $_" -ForegroundColor Green}};Write-Host "Done!"}else{Write-Host "No Plex registry found - PC is clean!"}
+```
+
+This will automatically remove any Plex authentication entries found.
+
+**Or use the script file:**
 
 1. **Stop Plex Media Server** (if running)
 2. Run the fix script:
